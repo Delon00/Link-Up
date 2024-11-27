@@ -133,11 +133,12 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import profileController from '../controllers/profileController.js';
+import authenticateToken from '../middleware/authenticateToken.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.patch('/privacy/:id', async (req, res) => {
+router.patch('/privacy/:id', authenticateToken, async (req, res) => {
     const userId = parseInt(req.params.id, 10);
     const { profile } = req.body;
 
@@ -165,5 +166,5 @@ router.patch('/privacy/:id', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-router.delete('/deleteProfile/:id', profileController.deleteProfile);
+router.delete('/deleteProfile/:id',authenticateToken, profileController.deleteProfile);
 export default router;

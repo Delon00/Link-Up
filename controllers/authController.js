@@ -11,7 +11,7 @@ const authController = {
     register: async (req, res) => {
         const { nom, prenom, username, email, password } = req.body;
 
-        if (!email || !password || !prenom || !nom ||!username) {
+        if (!email || !password || !prenom || !nom || !username) {
             return res.status(400).json({ message: 'Tous les champs sont obligatoires.' });
         }
 
@@ -38,19 +38,18 @@ const authController = {
                 },
             });
 
-
             const token = jwt.sign(
-                { userId: newUser.id }, 
+                { userId: newUser.id },
                 process.env.JWT_SECRET,
                 { expiresIn: process.env.JWT_EXPIRATION || '1h' }
             );
 
             const { password: _, ...userData } = newUser;
 
-            res.status(201).json({ 
-                message: 'Utilisateur créé avec succès', 
-                token, 
-                user: userData 
+            res.status(201).json({
+                message: 'Utilisateur créé avec succès',
+                token,
+                user: userData
             });
 
         } catch (err) {
@@ -60,22 +59,22 @@ const authController = {
     },
 
     login: async (req, res) => {
-        const { email, password } = req.body; 
+        const { email, password } = req.body;
 
         try {
             const user = await prisma.user.findUnique({ where: { email } });
-            
+
             if (!user) {
                 return res.status(400).json({ message: 'Utilisateur non trouvé' });
             }
 
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {
-                return res.status(401).json({ message: 'email ou mot de passe incorrect' });
+                return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
             }
 
             const token = jwt.sign(
-                { userId: user.id, role: user.role }, 
+                { userId: user.id, role: user.role },
                 process.env.JWT_SECRET,
                 { expiresIn: '1h' }
             );
@@ -89,6 +88,11 @@ const authController = {
             console.error("Erreur lors de la connexion :", err);
             res.status(500).json({ message: `Erreur serveur: ${err.message}` });
         }
+    },
+
+    logout: async ( res) => {
+        res.clearCookie('token');
+        res.status(200).json({ message: 'Déconnexion réussie' });
     }
 };
 

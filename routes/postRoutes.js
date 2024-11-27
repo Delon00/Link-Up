@@ -2,16 +2,18 @@
  * @swagger
  * tags:
  *   name: Post
- *   description: API pour le crud des post utilisateur
+ *   description: API pour la gestion des posts utilisateur
  */
-/**
+
 /**
  * @swagger
  * /post/create:
  *   post:
  *     summary: Créer un nouveau post
  *     tags: [Post]
- *     description: Crée un nouveau post avec les informations fournies.
+ *     security:
+ *       - bearerAuth: []
+ *     description: Crée un nouveau post avec les informations fournies. L'utilisateur doit être authentifié.
  *     requestBody:
  *       required: true
  *       content:
@@ -43,31 +45,17 @@
  *                   type: string
  *                   example: "Post created successfully"
  *                 post:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       example: 1
- *                     title:
- *                       type: string
- *                       example: "Mon premier post"
- *                     content:
- *                       type: string
- *                       example: "Ceci est le contenu de mon premier post."
- *                     userId:
- *                       type: integer
- *                       example: 1
- *                     mediaUrl:
- *                       type: string
- *                       example: "https://example.com/media/image.jpg"
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2023-10-01T12:00:00Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2023-10-01T12:00:00Z"
+ *                   $ref: '#/components/schemas/Post'
+ *       401:
+ *         description: Authentification nécessaire
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
  *       500:
  *         description: Erreur interne du serveur
  *         content:
@@ -75,7 +63,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "Internal server error"
  */
@@ -103,31 +91,7 @@
  *               type: object
  *               properties:
  *                 post:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       example: 1
- *                     title:
- *                       type: string
- *                       example: "Mon premier post"
- *                     content:
- *                       type: string
- *                       example: "Ceci est le contenu de mon premier post."
- *                     userId:
- *                       type: integer
- *                       example: 1
- *                     mediaUrl:
- *                       type: string
- *                       example: "https://example.com/media/image.jpg"
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2023-10-01T12:00:00Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2023-10-01T12:00:00Z"
+ *                   $ref: '#/components/schemas/Post'
  *       400:
  *         description: ID du post invalide
  *         content:
@@ -163,10 +127,12 @@
 /**
  * @swagger
  * /post/updatePost/{id}:
- *   put:
+ *   patch:
  *     summary: Mettre à jour un post par son ID
  *     tags: [Post]
- *     description: Met à jour les informations d'un post spécifié par son ID.
+ *     security:
+ *       - bearerAuth: []
+ *     description: Met à jour les informations d'un post spécifié par son ID. L'utilisateur doit être authentifié.
  *     parameters:
  *       - in: path
  *         name: id
@@ -186,7 +152,7 @@
  *                 example: "Mon premier post mis à jour"
  *               content:
  *                 type: string
- *                 example: "Ceci est le contenu mis à jour de mon premier post."
+ *                 example: "Ceci est le contenu mis à jour."
  *               mediaUrl:
  *                 type: string
  *                 example: "https://example.com/media/new_image.jpg"
@@ -202,33 +168,9 @@
  *                   type: string
  *                   example: "Post updated successfully"
  *                 post:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       example: 1
- *                     title:
- *                       type: string
- *                       example: "Mon premier post mis à jour"
- *                     content:
- *                       type: string
- *                       example: "Ceci est le contenu mis à jour de mon premier post."
- *                     userId:
- *                       type: integer
- *                       example: 1
- *                     mediaUrl:
- *                       type: string
- *                       example: "https://example.com/media/new_image.jpg"
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2023-10-01T12:00:00Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2023-10-01T12:00:00Z"
- *       400:
- *         description: ID du post invalide
+ *                   $ref: '#/components/schemas/Post'
+ *       401:
+ *         description: Authentification nécessaire
  *         content:
  *           application/json:
  *             schema:
@@ -236,7 +178,7 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Invalid post ID"
+ *                   example: "Unauthorized"
  *       404:
  *         description: Post non trouvé
  *         content:
@@ -265,7 +207,9 @@
  *   delete:
  *     summary: Supprimer un post par son ID
  *     tags: [Post]
- *     description: Supprime un post spécifié par son ID.
+ *     security:
+ *       - bearerAuth: []
+ *     description: Supprime un post spécifié par son ID. L'utilisateur doit être authentifié.
  *     parameters:
  *       - in: path
  *         name: id
@@ -284,8 +228,8 @@
  *                 message:
  *                   type: string
  *                   example: "Post deleted successfully"
- *       400:
- *         description: ID du post invalide
+ *       401:
+ *         description: Authentification nécessaire
  *         content:
  *           application/json:
  *             schema:
@@ -293,7 +237,7 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Invalid post ID"
+ *                   example: "Unauthorized"
  *       404:
  *         description: Post non trouvé
  *         content:
@@ -322,7 +266,9 @@
  *   get:
  *     summary: Récupérer tous les posts
  *     tags: [Post]
- *     description: Récupère tous les posts.
+ *     security:
+ *       - bearerAuth: []
+ *     description: Récupère tous les posts disponibles. L'utilisateur doit être authentifié.
  *     responses:
  *       200:
  *         description: Liste de tous les posts
@@ -334,31 +280,17 @@
  *                 posts:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: integer
- *                         example: 1
- *                       title:
- *                         type: string
- *                         example: "Mon premier post"
- *                       content:
- *                         type: string
- *                         example: "Ceci est le contenu de mon premier post."
- *                       userId:
- *                         type: integer
- *                         example: 1
- *                       mediaUrl:
- *                         type: string
- *                         example: "https://example.com/media/image.jpg"
- *                       createdAt:
- *                         type: string
- *                         format: date-time
- *                         example: "2023-10-01T12:00:00Z"
- *                       updatedAt:
- *                         type: string
- *                         format: date-time
- *                         example: "2023-10-01T12:00:00Z"
+ *                     $ref: '#/components/schemas/Post'
+ *       401:
+ *         description: Authentification nécessaire
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
  *       500:
  *         description: Erreur interne du serveur
  *         content:
@@ -366,14 +298,53 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "Internal server error"
  */
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 1
+ *         title:
+ *           type: string
+ *           example: "Mon premier post"
+ *         content:
+ *           type: string
+ *           example: "Ceci est le contenu de mon premier post."
+ *         userId:
+ *           type: integer
+ *           example: 1
+ *         mediaUrl:
+ *           type: string
+ *           example: "https://example.com/media/image.jpg"
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2023-10-01T12:00:00Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2023-10-01T12:00:00Z"
+ * securitySchemes:
+ *   bearerAuth:
+ *     type: http
+ *     scheme: bearer
+ *     bearerFormat: JWT
+ */
+
+
 import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import postController from '../controllers/postController.js';
+import authenticateToken from '../middleware/authenticateToken.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -401,8 +372,9 @@ router.get('/getPost/:id', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-router.post('/create', postController.createPost);
-router.patch('/updatePost/:id', postController.updatePost);
-router.delete('/deletePost/:id', postController.deletePost);
-router.get('/getAllPosts', postController.getAllPosts);
+router.post('/create', authenticateToken, postController.createPost);
+router.patch('/updatePost/:id', authenticateToken, postController.updatePost);
+router.delete('/deletePost/:id', authenticateToken, postController.deletePost);
+router.get('/getAllPosts', authenticateToken, postController.getAllPosts);
+
 export default router;

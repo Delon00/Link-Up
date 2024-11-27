@@ -89,13 +89,43 @@
  *       401:
  *         description: Email ou mot de passe invalide
  */
-
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Déconnexion d'un utilisateur
+ *     tags: [Auth]
+ *     description: Déconnecte un utilisateur en supprimant le token.
+ *     responses:
+ *       200:
+ *         description: Déconnexion réussie
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Déconnexion réussie"
+ *       500:
+ *         description: Erreur interne du serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Erreur serveur"
+ */
 import express from 'express';
 import authController from '../controllers/authController.js';
+import authenticateToken from '../middleware/authenticateToken.js';
 
 const router = express.Router();
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.post('/logout', authenticateToken, authController.logout);
 
 export default router;
