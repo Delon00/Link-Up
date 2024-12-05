@@ -22,7 +22,11 @@ Socialink est une application plateforme de médias sociaux flexible pour les cr
    ```bash
    npm install
    ```
-
+4.Initialisation de l'ORM Prisma
+    ```bash
+    npx prisma migrate dev --name init
+   ```
+ 
 ## Utilisation
 
 ### Backend
