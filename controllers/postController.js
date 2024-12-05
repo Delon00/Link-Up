@@ -20,7 +20,7 @@ const profileController = {
                 },
             });
     
-            res.status(201).json({ message: 'Post créer avec succes', post: newPost });
+            res.status(201).json({ message: 'Post créer avec succès', post: newPost });
         } catch (error) {
             console.error('Error creating post:', error);
             res.status(500).json({ message: 'Internal server error' });
